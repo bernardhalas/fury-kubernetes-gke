@@ -1,0 +1,23 @@
+---
+
+- name: ensuring iptables-persistent is present on machine
+  apt:
+    name: iptables-persistent
+    state: latest
+
+- name: allowing ip-forward in kernel
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- iptables:
+    table: nat
+    chain: POSTROUTING
+    out_interface: ens4
+    jump: MASQUERADE
+    state: present
+  notify:
+    - persist iptables

@@ -1,0 +1,15 @@
+---
+
+- name: installing squid 
+  apt:
+    name: squid3
+    state: latest
+- name: configuring squid
+  template: 
+    src: "squid.conf.j2"
+    dest: "/etc/squid/squid.conf"
+- name: starting squid
+  systemd:
+    name: squid
+    enabled: yes
+    state: restarted
