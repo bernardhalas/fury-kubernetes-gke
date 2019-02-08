@@ -2,32 +2,80 @@ variable "name" {}
 variable "env" {}
 variable "kube-master-version" {}
 variable "kube-node-version" {}
-variable "node-number" {}
-variable "node-type" {}
-variable "region" {}
-variable "network" {}
-variable "preemptible" {}
-variable "master_cidr" {}
-variable "authorized_cidr" {}
-variable "subnetwork_node_cidr" {}
-variable "subnetwork_pod_cidr" {}
-variable "subnetwork_svc_cidr" {}
-variable "ssh_public_key" {}
 
-// NAT GATEWAY VARIABLES
-variable "proxy_count" {}
+variable "node-number" {
+  default = 1
+}
 
-variable "proxy_image" {}
-variable "proxy_machine_type" {}
+variable "node-type" {
+  default = "n1-standard-1"
+}
 
-// GLUSTERD VARIABLES
-variable "glusterd_count" {}
+variable "node-os" {
+  default = "UBUNTU"
+}
 
-variable "glusterd_machine_type" {}
-variable "glusterd_disk_dimension" {}
-variable "glusterd_ip_offset" {}
-variable "glusterd_image" {}
+variable "region" {
+  default = "europe-west1"
+}
+
+variable "subnetwork-master-cidr" {
+  default = "10.20.0.0/28"
+}
+
+variable "master-authorized-cidr" {
+  default = "0.0.0.0/0"
+}
+
+variable "subnetwork-node-cidr" {
+  default = "10.1.0.0/16"
+}
+
+variable "subnetwork-pod-cidr" {
+  default = "10.3.0.0/16"
+}
+
+variable "subnetwork-svc-cidr" {
+  default = "10.5.0.0/16"
+}
 
 data "google_compute_zones" "available" {
   region = "${var.region}"
+}
+
+variable "infra-node-number" {
+  default = 1
+}
+
+variable "infra-node-type" {
+  default = "n1-standard-1"
+}
+
+variable "infra-node-os" {
+  default = "COS"
+}
+
+variable "bastion-count" {
+  default = 1
+}
+
+variable "bastion-machine-type" {
+  default = "g1-small"
+}
+
+data "google_compute_image" "bastion" {
+  family  = "ubuntu-1804-lts"
+  project = "ubuntu-os-cloud"
+}
+
+variable "bastion-ssh-enabled" {
+  type        = "string"
+  default     = true
+  description = "disabling this will block all the INGRESS traffic on port 22 of the bastion instances"
+}
+
+variable "bastion-vpn-enabled" {
+  type        = "string"
+  default     = true
+  description = "disabling this will block all the INGRESS traffic on port 1194 of the bastion instances"
 }

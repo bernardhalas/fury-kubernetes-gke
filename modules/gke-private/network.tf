@@ -1,55 +1,51 @@
-resource "google_compute_subnetwork" "cluster" {
+resource "google_compute_network" "main" {
+  name                    = "${var.name}-${var.env}"
+  auto_create_subnetworks = "false"
+}
+
+resource "google_compute_subnetwork" "main" {
   name                     = "${var.region}-${var.name}-${var.env}"
-  ip_cidr_range            = "${var.subnetwork_node_cidr}"
-  network                  = "${var.network}"
+  ip_cidr_range            = "${var.subnetwork-node-cidr}"
+  network                  = "${google_compute_network.main.self_link}"
   region                   = "${var.region}"
   private_ip_google_access = true
 
   secondary_ip_range = [{
     range_name    = "services-cidr"
-    ip_cidr_range = "${var.subnetwork_svc_cidr}"
+    ip_cidr_range = "${var.subnetwork-svc-cidr}"
   },
     {
       range_name    = "cluster-cidr"
-      ip_cidr_range = "${var.subnetwork_pod_cidr}"
+      ip_cidr_range = "${var.subnetwork-pod-cidr}"
     },
   ]
 }
 
-// THIS IS NEEDED TO ALLOW PODS AND SERVICES TO ACCESS THE INTERNET
-resource "google_compute_firewall" "pod-svc-to-proxy" {
-  name      = "${var.name}-${var.env}-squid-from-k8s"
-  network   = "${var.network}"
-  direction = "INGRESS"
-
-  allow {
-    protocol = "tcp"
-    ports    = ["3128"]
-  }
-
-  target_tags   = ["proxy-${var.env}"]
-  source_ranges = ["${var.subnetwork_pod_cidr}", "${var.subnetwork_svc_cidr}"]
+resource "google_compute_address" "main" {
+  count  = 2
+  name   = "nat-ip-${var.name}-${var.env}-${count.index}"
+  region = "${var.region}"
 }
 
-// THIS IS NEEDED TO ALLOW OPERATORS TO ACCESS THE INTERNALS OF THE CLUSTER
-resource "google_compute_firewall" "ssh" {
-  name      = "${var.name}-${var.env}-ssh"
-  network   = "${var.network}"
-  direction = "INGRESS"
+resource "google_compute_router" "main" {
+  name    = "router-${var.name}-${var.env}"
+  region  = "${var.region}"
+  network = "${google_compute_network.main.self_link}"
+}
 
-  allow {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  target_tags   = ["proxy-${var.env}"]
-  source_ranges = ["0.0.0.0/0"]
+resource "google_compute_router_nat" "main" {
+  name                               = "nat-${var.name}-${var.env}"
+  router                             = "${google_compute_router.main.name}"
+  region                             = "${var.region}"
+  nat_ip_allocate_option             = "MANUAL_ONLY"
+  nat_ips                            = ["${google_compute_address.main.*.self_link}"]
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
 }
 
 // THIS IS NEEDED TO ALLOW NODES IN THE SAME SUBNET TO COMUNICATE TO EACH OTHER
 resource "google_compute_firewall" "nodes" {
   name      = "${var.name}-${var.env}-nodes"
-  network   = "${var.network}"
+  network   = "${google_compute_network.main.self_link}"
   direction = "INGRESS"
 
   allow {
@@ -58,18 +54,4 @@ resource "google_compute_firewall" "nodes" {
 
   target_tags = ["${var.env}"]
   source_tags = ["${var.env}"]
-}
-
-// THIS IS NEEDED TO ALLOW PODS AND SERVICES TO ACCESS NODES
-resource "google_compute_firewall" "pods-to-gluster" {
-  name      = "${var.name}-${var.env}-pod-to-nodes"
-  network   = "${var.network}"
-  direction = "INGRESS"
-
-  allow {
-    protocol = "all"
-  }
-
-  target_tags   = ["${var.env}"]
-  source_ranges = ["${var.subnetwork_pod_cidr}", "${var.subnetwork_svc_cidr}"]
 }
