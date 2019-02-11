@@ -8,7 +8,7 @@ All packages in this repository have following dependencies, for package
 specific dependencies please visit the single package's documentation:
 
 - GCP ServiceAccount with Project Editor permissions
-- [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) >= v0.11.11
+- [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) >= `v0.11.11`
 - [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) >= `v1.11.7`
 
 ## Examples
