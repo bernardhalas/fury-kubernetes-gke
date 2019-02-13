@@ -33,7 +33,7 @@ resource "google_sql_database_instance" "main" {
 }
 
 resource "google_sql_database" "main" {
-  count     = "${len(var.databases)}"
+  count     = "${length(var.databases)}"
   name      = "${element(var.databases,count.index)}"
   instance  = "${google_sql_database_instance.main.name}"
   charset   = "UTF8"
