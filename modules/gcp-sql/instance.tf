@@ -9,11 +9,7 @@ resource "google_sql_database_instance" "main" {
     availability_type = "REGIONAL"
     disk_autoresize   = true
     disk_size         = 10                     # this is initial disk size
-
-    database_flags {
-      name  = "${var.name}"
-      value = "${var.env}"
-    }
+    disk_type = "PD_SSD"
 
     maintenance_window {
       day          = 3
@@ -38,4 +34,18 @@ resource "google_sql_database" "main" {
   instance  = "${google_sql_database_instance.main.name}"
   charset   = "UTF8"
   collation = "en_US.UTF8"
+}
+
+resource "google_compute_global_address" "main" {
+    name          = "sql-ip-${var.name}-${var.env}"
+    purpose       = "VPC_PEERING"
+    address_type = "INTERNAL"
+    prefix_length = 16
+    network       = "${var.network}"
+}
+
+resource "google_service_networking_connection" "main" {
+    network       = "${var.network}"
+    service       = "servicenetworking.googleapis.com"
+    reserved_peering_ranges = ["${google_compute_global_address.main.name}"]
 }
