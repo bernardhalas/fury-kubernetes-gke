@@ -40,6 +40,9 @@ resource "google_compute_instance" "bastion" {
     role                   = "vpn"
     block-project-ssh-keys = true
   }
+  lifecycle {
+    ignore_changes = ["boot_disk.0.initialize_params.0.image"]
+  }
 }
 
 resource "google_compute_firewall" "ssh" {
