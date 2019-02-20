@@ -19,15 +19,15 @@ variable "instance-type" {
   default = "custom-1-4096"
 }
 
-variable "network" {
-  type        = "string"
-  description = "network link to connect the instance to"
-}
-
 provider "google" {
   version = "2.0.0"
 }
 
-provider "google-beta" {
-  version = "2.0.0"
-}
+// variable "network" {
+//   type        = "string"
+//   description = "network link to connect the instance to"
+// }
+
+// provider "google-beta" {
+//   version = "2.0.0"
+// }

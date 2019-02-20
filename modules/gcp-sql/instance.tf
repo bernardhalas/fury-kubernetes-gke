@@ -8,7 +8,7 @@ resource "google_sql_database_instance" "main" {
     activation_policy = "ALWAYS"
     availability_type = "REGIONAL"
     disk_autoresize   = true
-    disk_size         = 10                     # this is initial disk size
+    disk_size         = 10
     disk_type         = "PD_SSD"
 
     maintenance_window {
@@ -22,10 +22,10 @@ resource "google_sql_database_instance" "main" {
       start_time = "00:45"
     }
 
-    ip_configuration {
-      ipv4_enabled    = "false"
-      private_network = "${var.network}"
-    }
+    // ip_configuration {
+    //   ipv4_enabled    = "false"
+    //   private_network = "${var.network}"
+    // }
   }
 }
 
@@ -37,18 +37,18 @@ resource "google_sql_database" "main" {
   collation = "en_US.UTF8"
 }
 
-resource "google_compute_global_address" "main" {
-  provider      = "google-beta"
-  name          = "sql-ip-${var.name}-${var.env}"
-  address_type  = "INTERNAL"
-  purpose       = "VPC_PEERING"
-  prefix_length = 16
-  network       = "${var.network}"
-}
+// resource "google_compute_global_address" "main" {
+//   provider      = "google-beta"
+//   name          = "sql-ip-${var.name}-${var.env}"
+//   address_type  = "INTERNAL"
+//   purpose       = "VPC_PEERING"
+//   prefix_length = 16
+//   network       = "${var.network}"
+// }
 
-resource "google_service_networking_connection" "main" {
-  provider                = "google-beta"
-  network                 = "${var.network}"
-  service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = ["${google_compute_global_address.main.name}"]
-}
+// resource "google_service_networking_connection" "main" {
+//   provider                = "google-beta"
+//   network                 = "${var.network}"
+//   service                 = "servicenetworking.googleapis.com"
+//   reserved_peering_ranges = ["${google_compute_global_address.main.name}"]
+// }
