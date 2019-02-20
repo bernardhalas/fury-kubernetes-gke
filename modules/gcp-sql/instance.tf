@@ -38,6 +38,7 @@ resource "google_sql_database" "main" {
 }
 
 resource "google_compute_global_address" "main" {
+  provider = "google-beta"
   name          = "sql-ip-${var.name}-${var.env}"
   address_type  = "INTERNAL"
   purpose       = "VPC_PEERING"
@@ -46,6 +47,7 @@ resource "google_compute_global_address" "main" {
 }
 
 resource "google_service_networking_connection" "private_vpc_connection" {
+    provider = "google-beta"
     network       = "${var.network}"
     service       = "servicenetworking.googleapis.com"
     reserved_peering_ranges = ["${google_compute_global_address.main.name}"]
