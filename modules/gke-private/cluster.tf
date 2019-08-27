@@ -128,6 +128,7 @@ resource "google_container_node_pool" "infra" {
     labels {
       name                     = "${var.name}"
       env                      = "${var.env}"
+      nodepool                 = "infra"
       creator                  = "terraform-sighup-module"
       disable-legacy-endpoints = true
     }
