@@ -79,7 +79,3 @@ variable "bastion-vpn-enabled" {
   default     = true
   description = "disabling this will block all the INGRESS traffic on port 1194 of the bastion instances"
 }
-
-provider "google" {
-  version = "2.0.0"
-}
