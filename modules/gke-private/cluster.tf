@@ -78,15 +78,15 @@ resource "google_container_node_pool" "main" {
     ]
 
     labels {
-      name    = "${var.name}"
-      env     = "${var.env}"
-      creator = "terraform-sighup-module"
+      name     = "${var.name}"
+      env      = "${var.env}"
+      nodepool = "main"
+      creator  = "terraform-sighup-module"
     }
 
     metadata {
-      env                    = "${var.env}"
-      role                   = "gke"
-      block-project-ssh-keys = true
+      block-project-ssh-keys   = true
+      disable-legacy-endpoints = "true"
     }
 
     tags = ["${var.name}", "${var.env}", "internal-${var.env}"]
@@ -126,17 +126,14 @@ resource "google_container_node_pool" "infra" {
     ]
 
     labels {
-      name                     = "${var.name}"
-      env                      = "${var.env}"
-      nodepool                 = "infra"
-      creator                  = "terraform-sighup-module"
-      disable-legacy-endpoints = true
+      name     = "${var.name}"
+      env      = "${var.env}"
+      nodepool = "infra"
+      creator  = "terraform-sighup-module"
     }
 
     metadata {
-      env                    = "${var.env}"
-      role                   = "gke"
-      block-project-ssh-keys = true
+      block-project-ssh-keys   = true
       disable-legacy-endpoints = "true"
     }
 
