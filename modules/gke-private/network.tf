@@ -10,10 +10,11 @@ resource "google_compute_subnetwork" "main" {
   region                   = "${var.region}"
   private_ip_google_access = true
 
-  secondary_ip_range = [{
-    range_name    = "services-cidr"
-    ip_cidr_range = "${var.subnetwork-svc-cidr}"
-  },
+  secondary_ip_range = [
+    {
+      range_name    = "services-cidr"
+      ip_cidr_range = "${var.subnetwork-svc-cidr}"
+    },
     {
       range_name    = "cluster-cidr"
       ip_cidr_range = "${var.subnetwork-pod-cidr}"

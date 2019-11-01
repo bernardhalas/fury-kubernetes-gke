@@ -7,7 +7,6 @@ resource "google_compute_instance" "bastion" {
   count                     = "${var.bastion-count}"
   name                      = "bastion-${var.name}-${var.env}-${count.index+1}"
   machine_type              = "${var.bastion-machine-type}"
-  tags                      = ["bastion-${var.env}", "${var.name}", "${var.env}", "vpn"]
   can_ip_forward            = true
   zone                      = "${data.google_compute_zones.available.names[count.index]}"
   allow_stopping_for_update = true
@@ -40,6 +39,13 @@ resource "google_compute_instance" "bastion" {
     role                   = "vpn"
     block-project-ssh-keys = true
   }
+
+  tags = [
+    "bastion-${var.env}",
+    "${var.name}",
+    "${var.env}",
+    "vpn",
+  ]
 
   lifecycle {
     ignore_changes = ["boot_disk.0.initialize_params.0.image"]

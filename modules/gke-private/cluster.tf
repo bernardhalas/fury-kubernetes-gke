@@ -1,6 +1,6 @@
 resource "google_container_cluster" "main" {
-  name   = "${var.name}-${var.env}"
-  region = "${var.region}"
+  name     = "${var.name}-${var.env}"
+  location = "${var.region}"
 
   private_cluster_config {
     enable_private_nodes    = true
@@ -52,7 +52,7 @@ resource "google_container_cluster" "main" {
 resource "google_container_node_pool" "main" {
   name       = "main-${var.name}-${var.env}"
   node_count = "${var.node-number}"
-  region     = "${var.region}"
+  location   = "${google_container_cluster.main.location}"
   cluster    = "${google_container_cluster.main.name}"
 
   management {
@@ -89,7 +89,11 @@ resource "google_container_node_pool" "main" {
       disable-legacy-endpoints = "true"
     }
 
-    tags = ["${var.name}", "${var.env}", "internal-${var.env}"]
+    tags = [
+      "${var.name}",
+      "${var.env}",
+      "internal-${var.env}",
+    ]
   }
 
   timeouts {
@@ -100,7 +104,7 @@ resource "google_container_node_pool" "main" {
 resource "google_container_node_pool" "infra" {
   name       = "infra-${var.name}-${var.env}"
   node_count = "${var.infra-node-number}"
-  region     = "${var.region}"
+  location   = "${google_container_cluster.main.location}"
   cluster    = "${google_container_cluster.main.name}"
 
   management {
@@ -137,7 +141,12 @@ resource "google_container_node_pool" "infra" {
       disable-legacy-endpoints = "true"
     }
 
-    tags = ["${var.name}", "${var.env}", "infra-${var.env}", "internal-${var.env}"]
+    tags = [
+      "${var.name}",
+      "${var.env}",
+      "infra-${var.env}",
+      "internal-${var.env}",
+    ]
   }
 
   timeouts {

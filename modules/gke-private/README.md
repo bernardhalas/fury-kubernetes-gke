@@ -1,6 +1,6 @@
 # GKE private
 
-For security reasons all the hosts in the cluster will take the ssh keys added to the GCP project. 
+For security reasons all the hosts in the cluster will take the ssh keys added to the GCP project.
 For now, there is not an automatic way of adding all your users's key, but it's easy to manage by hand.
 
 This is the console url for changing/adding/removing keys https://console.cloud.google.com/compute/metadata/sshKeys
@@ -25,50 +25,52 @@ terraform {
     bucket  = "customer-terraform"
     prefix  = "sighup"
   }
-  required_version = ">= 0.11.11"
+  required_version = "~> 0.11.14"
 }
 
 provider "google" {
-  version = "1.20.0"
+  version = "2.18.0"
 }
 
 module "staging" {
   source = "../vendor/modules/gke/gke-private"
-  name = "example-customer"
-  env = "staging"
-  region = "europe-west1"
+
+  name                   = "example-customer"
+  env                    = "staging"
+  region                 = "europe-west1"
   subnetwork-master-cidr = "10.20.0.96/28"
   master-authorized-cidr = "0.0.0.0/0"
-  kube-master-version = "1.11.6-gke.6"
-  kube-node-version = "1.11.6-gke.6"
-  node-number = 1
-  node-type = "n1-standard-2"
-  node-os = "COS"
-  infra-node-number = 0
-  subnetwork-node-cidr = "10.1.0.0/16"
-  subnetwork-pod-cidr = "10.3.0.0/16"
-  subnetwork-svc-cidr = "10.5.0.0/16"
-  bastion-ssh-enabled = true
-  bastion-vpn-enabled = true
+  kube-master-version    = "1.11.6-gke.6"
+  kube-node-version      = "1.11.6-gke.6"
+  node-number            = 1
+  node-type              = "n1-standard-2"
+  node-os                = "COS"
+  infra-node-number      = 0
+  subnetwork-node-cidr   = "10.1.0.0/16"
+  subnetwork-pod-cidr    = "10.3.0.0/16"
+  subnetwork-svc-cidr    = "10.5.0.0/16"
+  bastion-ssh-enabled    = true
+  bastion-vpn-enabled    = true
 }
 
 module "production" {
   source = "../vendor/modules/gke/gke-private"
-  name = "example-customer"
-  env = "production"
-  region = "europe-west1"
+
+  name                   = "example-customer"
+  env                    = "production"
+  region                 = "europe-west1"
   subnetwork-master-cidr = "10.20.1.96/28"
   master-authorized-cidr = "0.0.0.0/0"
-  kube-master-version = "1.11.6-gke.6"
-  kube-node-version = "1.11.6-gke.6"
-  node-number = 2
-  node-os = "COS"
-  node-type = "n1-standard-2"
-  infra-node-number = 1
-  subnetwork-node-cidr = "10.101.0.0/16"
-  subnetwork-pod-cidr = "10.103.0.0/16"
-  subnetwork-svc-cidr = "10.105.0.0/16"
-  bastion-ssh-enabled = true
-  bastion-vpn-enabled = true
+  kube-master-version    = "1.11.6-gke.6"
+  kube-node-version      = "1.11.6-gke.6"
+  node-number            = 2
+  node-os                = "COS"
+  node-type              = "n1-standard-2"
+  infra-node-number      = 1
+  subnetwork-node-cidr   = "10.101.0.0/16"
+  subnetwork-pod-cidr    = "10.103.0.0/16"
+  subnetwork-svc-cidr    = "10.105.0.0/16"
+  bastion-ssh-enabled    = true
+  bastion-vpn-enabled    = true
 }
 ```
