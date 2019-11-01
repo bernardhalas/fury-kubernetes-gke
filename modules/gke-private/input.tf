@@ -33,6 +33,10 @@ variable "master_authorized_cidr_blocks" {
   ]
 }
 
+variable "daily_maintenance_time" {
+  default = "04:00"
+}
+
 variable "subnetwork_node_cidr" {
   default = "10.1.0.0/16"
 }

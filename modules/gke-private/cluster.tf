@@ -20,7 +20,7 @@ resource "google_container_cluster" "main" {
 
   maintenance_policy {
     daily_maintenance_window {
-      start_time = "08:00"
+      start_time = "${var.daily_maintenance_time}"
     }
   }
 
