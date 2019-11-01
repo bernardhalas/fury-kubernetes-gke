@@ -5,7 +5,7 @@ resource "google_container_cluster" "main" {
   private_cluster_config {
     enable_private_nodes    = true
     enable_private_endpoint = false
-    master_ipv4_cidr_block  = "${var.subnetwork-master-cidr}"
+    master_ipv4_cidr_block  = "${var.subnetwork_master_cidr}"
   }
 
   ip_allocation_policy {
@@ -13,7 +13,7 @@ resource "google_container_cluster" "main" {
     services_secondary_range_name = "services-cidr"
   }
 
-  min_master_version = "${var.kube-master-version}"
+  min_master_version = "${var.kube_master_version}"
   network            = "${google_compute_network.main.self_link}"
   subnetwork         = "${google_compute_subnetwork.main.self_link}"
   logging_service    = "logging.googleapis.com"
@@ -26,7 +26,7 @@ resource "google_container_cluster" "main" {
 
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = "${var.master-authorized-cidr}"
+      cidr_block   = "${var.master_authorized_cidr}"
       display_name = "default"
     }
   }
@@ -51,7 +51,7 @@ resource "google_container_cluster" "main" {
 
 resource "google_container_node_pool" "main" {
   name       = "main-${var.name}-${var.env}"
-  node_count = "${var.node-number}"
+  node_count = "${var.node_number}"
   location   = "${google_container_cluster.main.location}"
   cluster    = "${google_container_cluster.main.name}"
 
@@ -60,14 +60,14 @@ resource "google_container_node_pool" "main" {
     auto_upgrade = "false"
   }
 
-  version = "${var.kube-node-version}"
+  version = "${var.kube_node_version}"
 
   node_config {
     disk_size_gb = 100
     disk_type    = "pd-ssd"
-    machine_type = "${var.node-type}"
+    machine_type = "${var.node_type}"
 
-    image_type  = "${var.node-os}"
+    image_type  = "${var.node_os}"
     preemptible = "false"
 
     oauth_scopes = [
@@ -103,7 +103,7 @@ resource "google_container_node_pool" "main" {
 
 resource "google_container_node_pool" "infra" {
   name       = "infra-${var.name}-${var.env}"
-  node_count = "${var.infra-node-number}"
+  node_count = "${var.infra_node_number}"
   location   = "${google_container_cluster.main.location}"
   cluster    = "${google_container_cluster.main.name}"
 
@@ -112,14 +112,14 @@ resource "google_container_node_pool" "infra" {
     auto_upgrade = "false"
   }
 
-  version = "${var.kube-node-version}"
+  version = "${var.kube_node_version}"
 
   node_config {
     disk_size_gb = 100
     disk_type    = "pd-ssd"
-    machine_type = "${var.infra-node-type}"
+    machine_type = "${var.infra_node_type}"
 
-    image_type  = "${var.infra-node-os}"
+    image_type  = "${var.infra_node_os}"
     preemptible = "false"
 
     oauth_scopes = [

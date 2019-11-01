@@ -4,9 +4,9 @@ resource "google_compute_address" "bastion" {
 }
 
 resource "google_compute_instance" "bastion" {
-  count                     = "${var.bastion-count}"
+  count                     = "${var.bastion_count}"
   name                      = "bastion-${var.name}-${var.env}-${count.index+1}"
-  machine_type              = "${var.bastion-machine-type}"
+  machine_type              = "${var.bastion_machine_type}"
   can_ip_forward            = true
   zone                      = "${data.google_compute_zones.available.names[count.index]}"
   allow_stopping_for_update = true
@@ -53,7 +53,7 @@ resource "google_compute_instance" "bastion" {
 }
 
 resource "google_compute_firewall" "ssh" {
-  count     = "${var.bastion-ssh-enabled}"
+  count     = "${var.bastion_vpn_enabled}"
   name      = "${var.name}-${var.env}-ssh-tcp"
   network   = "${google_compute_network.main.self_link}"
   direction = "INGRESS"
@@ -68,7 +68,7 @@ resource "google_compute_firewall" "ssh" {
 }
 
 resource "google_compute_firewall" "vpn" {
-  count     = "${var.bastion-vpn-enabled}"
+  count     = "${var.bastion_vpn_enabled}"
   name      = "${var.name}-${var.env}-ssh-udp"
   network   = "${google_compute_network.main.self_link}"
   direction = "INGRESS"

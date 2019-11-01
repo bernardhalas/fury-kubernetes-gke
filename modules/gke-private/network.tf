@@ -5,7 +5,7 @@ resource "google_compute_network" "main" {
 
 resource "google_compute_subnetwork" "main" {
   name                     = "${var.region}-${var.name}-${var.env}"
-  ip_cidr_range            = "${var.subnetwork-node-cidr}"
+  ip_cidr_range            = "${var.subnetwork_node_cidr}"
   network                  = "${google_compute_network.main.self_link}"
   region                   = "${var.region}"
   private_ip_google_access = true
@@ -13,11 +13,11 @@ resource "google_compute_subnetwork" "main" {
   secondary_ip_range = [
     {
       range_name    = "services-cidr"
-      ip_cidr_range = "${var.subnetwork-svc-cidr}"
+      ip_cidr_range = "${var.subnetwork_svc_cidr}"
     },
     {
       range_name    = "cluster-cidr"
-      ip_cidr_range = "${var.subnetwork-pod-cidr}"
+      ip_cidr_range = "${var.subnetwork_pod_cidr}"
     },
   ]
 }

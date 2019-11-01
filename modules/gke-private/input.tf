@@ -1,17 +1,17 @@
 variable "name" {}
 variable "env" {}
-variable "kube-master-version" {}
-variable "kube-node-version" {}
+variable "kube_master_version" {}
+variable "kube_node_version" {}
 
-variable "node-number" {
+variable "node_number" {
   default = 1
 }
 
-variable "node-type" {
+variable "node_type" {
   default = "n1-standard-1"
 }
 
-variable "node-os" {
+variable "node_os" {
   default = "UBUNTU"
 }
 
@@ -19,23 +19,23 @@ variable "region" {
   default = "europe-west1"
 }
 
-variable "subnetwork-master-cidr" {
+variable "subnetwork_master_cidr" {
   default = "10.20.0.0/28"
 }
 
-variable "master-authorized-cidr" {
+variable "master_authorized_cidr" {
   default = "0.0.0.0/0"
 }
 
-variable "subnetwork-node-cidr" {
+variable "subnetwork_node_cidr" {
   default = "10.1.0.0/16"
 }
 
-variable "subnetwork-pod-cidr" {
+variable "subnetwork_pod_cidr" {
   default = "10.3.0.0/16"
 }
 
-variable "subnetwork-svc-cidr" {
+variable "subnetwork_svc_cidr" {
   default = "10.5.0.0/16"
 }
 
@@ -43,23 +43,23 @@ data "google_compute_zones" "available" {
   region = "${var.region}"
 }
 
-variable "infra-node-number" {
+variable "infra_node_number" {
   default = 1
 }
 
-variable "infra-node-type" {
+variable "infra_node_type" {
   default = "n1-standard-1"
 }
 
-variable "infra-node-os" {
+variable "infra_node_os" {
   default = "COS"
 }
 
-variable "bastion-count" {
+variable "bastion_count" {
   default = 1
 }
 
-variable "bastion-machine-type" {
+variable "bastion_machine_type" {
   default = "g1-small"
 }
 
@@ -68,13 +68,13 @@ data "google_compute_image" "bastion" {
   project = "ubuntu-os-cloud"
 }
 
-variable "bastion-ssh-enabled" {
+variable "bastion_ssh_enabled" {
   type        = "string"
   default     = true
   description = "disabling this will block all the INGRESS traffic on port 22 of the bastion instances"
 }
 
-variable "bastion-vpn-enabled" {
+variable "bastion_vpn_enabled" {
   type        = "string"
   default     = true
   description = "disabling this will block all the INGRESS traffic on port 1194 of the bastion instances"
