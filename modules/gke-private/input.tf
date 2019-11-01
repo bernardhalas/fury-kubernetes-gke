@@ -3,6 +3,16 @@ variable "env" {}
 variable "kube_master_version" {}
 variable "kube_node_version" {}
 
+variable "node_pools" {
+  type = "list"
+
+  default = [
+    {
+      name = "app"
+    }
+  ]
+}
+
 variable "node_number" {
   default = 1
 }

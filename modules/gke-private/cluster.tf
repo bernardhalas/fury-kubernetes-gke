@@ -50,6 +50,64 @@ resource "google_container_cluster" "main" {
 
   remove_default_node_pool = true
   initial_node_count       = 1
+
+  timeouts {
+    update = "20m"
+  }
+}
+
+resource "google_container_node_pool" "pool" {
+  count = "${length(var.node_pools)}"
+  name = "${lookup(var.node_pools[count.index], "name")}"
+  location   = "${google_container_cluster.main.location}"
+  cluster    = "${google_container_cluster.main.name}"
+
+  autoscaling {
+    min_node_count = "${lookup(var.node_pools[count.index], "autoscaling_min_node_count", 1)}"
+    max_node_count = "${lookup(var.node_pools[count.index], "autoscaling_max_node_count", 1)}"
+  }
+
+  initial_node_count = "${lookup(var.node_pools[count.index], "initial_node_count", 1)}"
+
+  management {
+    auto_repair = "${lookup(var.node_pools[count.index], "auto_repair", true)}"
+    auto_upgrade = "${lookup(var.node_pools[count.index], "auto_upgrade", false)}"
+  }
+
+  node_config {
+    disk_size_gb = "${lookup(var.node_pools[count.index], "disk_size_gb", 100)}"
+    disk_type = "${lookup(var.node_pools[count.index], "disk_type", "pd-ssd")}"
+    image_type = "${lookup(var.node_pools[count.index], "os", "COS")}"
+    machine_type = "${lookup(var.node_pools[count.index], "machine_type", "n1-standard-1")}"
+    preemptible = "${lookup(var.node_pools[count.index], "preemptible", false)}"
+
+    labels {
+      name = "${var.name}"
+      env = "${var.env}"
+    }
+
+    metadata {
+      block-project-ssh-keys   = "true"
+      disable-legacy-endpoints = "true"
+    }
+
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/compute",
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+    ]
+
+    tags = [
+      "${var.name}",
+      "${var.env}",
+      "internal-${var.env}",
+    ]
+  }
+
+  timeouts {
+    update = "20m"
+  }
 }
 
 resource "google_container_node_pool" "main" {
