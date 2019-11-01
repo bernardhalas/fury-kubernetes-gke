@@ -29,6 +29,11 @@ resource "google_container_cluster" "main" {
     cidr_blocks = "${var.master_authorized_cidr_blocks}"
   }
 
+  network_policy {
+    enabled = true
+    provider = "CALICO"
+  }
+
   addons_config {
     http_load_balancing {
       disabled = true
@@ -37,10 +42,10 @@ resource "google_container_cluster" "main" {
     horizontal_pod_autoscaling {
       disabled = false
     }
-  }
 
-  network_policy {
-    enabled = true
+    network_policy_config {
+      disabled = false
+    }
   }
 
   remove_default_node_pool = true
