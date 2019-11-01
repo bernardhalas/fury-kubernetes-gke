@@ -23,8 +23,14 @@ variable "subnetwork_master_cidr" {
   default = "10.20.0.0/28"
 }
 
-variable "master_authorized_cidr" {
-  default = "0.0.0.0/0"
+variable "master_authorized_cidr_blocks" {
+  type = "list"
+  default = [
+    {
+      cidr_block   = "0.0.0.0/0"
+      display_name = "default"
+    },
+  ]
 }
 
 variable "subnetwork_node_cidr" {
