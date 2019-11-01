@@ -9,6 +9,7 @@ resource "google_container_cluster" "main" {
   }
 
   ip_allocation_policy {
+    use_ip_aliases = true
     cluster_secondary_range_name  = "cluster-cidr"
     services_secondary_range_name = "services-cidr"
   }
