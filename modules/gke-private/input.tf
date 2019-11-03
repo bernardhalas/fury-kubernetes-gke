@@ -9,8 +9,14 @@ variable "node_pools" {
   default = [
     {
       name = "app"
-    }
+    },
   ]
+}
+
+variable "node_taints" {
+  type = "map"
+
+  default = {}
 }
 
 variable "node_number" {
@@ -35,6 +41,7 @@ variable "subnetwork_master_cidr" {
 
 variable "master_authorized_cidr_blocks" {
   type = "list"
+
   default = [
     {
       cidr_block   = "0.0.0.0/0"

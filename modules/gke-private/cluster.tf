@@ -9,7 +9,7 @@ resource "google_container_cluster" "main" {
   }
 
   ip_allocation_policy {
-    use_ip_aliases = true
+    use_ip_aliases                = true
     cluster_secondary_range_name  = "cluster-cidr"
     services_secondary_range_name = "services-cidr"
   }
@@ -30,7 +30,7 @@ resource "google_container_cluster" "main" {
   }
 
   network_policy {
-    enabled = true
+    enabled  = true
     provider = "CALICO"
   }
 
@@ -57,10 +57,11 @@ resource "google_container_cluster" "main" {
 }
 
 resource "google_container_node_pool" "pool" {
-  count = "${length(var.node_pools)}"
-  name = "${lookup(var.node_pools[count.index], "name")}"
-  location   = "${google_container_cluster.main.location}"
-  cluster    = "${google_container_cluster.main.name}"
+  provider = "google-beta"
+  count    = "${length(var.node_pools)}"
+  name     = "${lookup(var.node_pools[count.index], "name")}"
+  location = "${google_container_cluster.main.location}"
+  cluster  = "${google_container_cluster.main.name}"
 
   autoscaling {
     min_node_count = "${lookup(var.node_pools[count.index], "autoscaling_min_node_count", 1)}"
@@ -70,20 +71,20 @@ resource "google_container_node_pool" "pool" {
   initial_node_count = "${lookup(var.node_pools[count.index], "initial_node_count", 1)}"
 
   management {
-    auto_repair = "${lookup(var.node_pools[count.index], "auto_repair", true)}"
+    auto_repair  = "${lookup(var.node_pools[count.index], "auto_repair", true)}"
     auto_upgrade = "${lookup(var.node_pools[count.index], "auto_upgrade", false)}"
   }
 
   node_config {
     disk_size_gb = "${lookup(var.node_pools[count.index], "disk_size_gb", 100)}"
-    disk_type = "${lookup(var.node_pools[count.index], "disk_type", "pd-ssd")}"
-    image_type = "${lookup(var.node_pools[count.index], "os", "COS")}"
+    disk_type    = "${lookup(var.node_pools[count.index], "disk_type", "pd-ssd")}"
+    image_type   = "${lookup(var.node_pools[count.index], "os", "COS")}"
     machine_type = "${lookup(var.node_pools[count.index], "machine_type", "n1-standard-1")}"
-    preemptible = "${lookup(var.node_pools[count.index], "preemptible", false)}"
+    preemptible  = "${lookup(var.node_pools[count.index], "preemptible", false)}"
 
     labels {
       name = "${var.name}"
-      env = "${var.env}"
+      env  = "${var.env}"
     }
 
     metadata {
@@ -98,12 +99,16 @@ resource "google_container_node_pool" "pool" {
       "https://www.googleapis.com/auth/monitoring",
     ]
 
+    taint = "${var.node_taints[lookup(var.node_pools[count.index], "name")]}"
+
     tags = [
       "${var.name}",
       "${var.env}",
       "internal-${var.env}",
     ]
   }
+
+  version = "${var.kube_node_version}"
 
   timeouts {
     update = "20m"
