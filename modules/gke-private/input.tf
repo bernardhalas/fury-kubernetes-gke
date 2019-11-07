@@ -58,18 +58,6 @@ data "google_compute_zones" "available" {
   region = "${var.region}"
 }
 
-variable "infra_node_number" {
-  default = 1
-}
-
-variable "infra_node_type" {
-  default = "n1-standard-1"
-}
-
-variable "infra_node_os" {
-  default = "COS"
-}
-
 variable "bastion_count" {
   default = 1
 }
