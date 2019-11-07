@@ -19,18 +19,6 @@ variable "node_taints" {
   default = {}
 }
 
-variable "node_number" {
-  default = 1
-}
-
-variable "node_type" {
-  default = "n1-standard-1"
-}
-
-variable "node_os" {
-  default = "UBUNTU"
-}
-
 variable "region" {
   default = "europe-west1"
 }
