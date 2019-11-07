@@ -56,7 +56,7 @@ resource "google_container_cluster" "main" {
   }
 }
 
-resource "google_container_node_pool" "pool" {
+resource "google_container_node_pool" "main" {
   provider = "google-beta"
   count    = "${length(var.node_pools)}"
   name     = "${lookup(var.node_pools[count.index], "name")}"
