@@ -11,6 +11,16 @@ specific dependencies please visit the single package's documentation:
 - [Terraform](https://learn.hashicorp.com/terraform/getting-started/install.html) >= `v0.11.11`
 - [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) >= `v1.11.7`
 
+## Compatibility
+
+| Distribution Version / Kubernetes Version | 1.11.X             | 1.12.X             | 1.13.X             | 1.14.X             | 1.15.X             | 1.16.X             |
+|-------------------------------------------|:------------------:|:------------------:|:------------------:|:------------------:|:------------------:|:------------------:|
+| v1.11.6                                   | :white_check_mark: |                    |                    |                    |                    |                    |
+
+- :white_check_mark: Compatible
+- :warning: Has issues
+- :x: Incompatible
+
 ## Examples
 
 To see examples on how to customize Fury distribution with kustomize please go to [examples](examples)
