@@ -79,3 +79,9 @@ variable "bastion-vpn-enabled" {
   default     = true
   description = "disabling this will block all the INGRESS traffic on port 1194 of the bastion instances"
 }
+
+variable "cert-manager-support" {
+  type        = "string"
+  default     = false
+  description = "enabling this will open traffic from GKE masters to GKE workers on port 6443 where cert-manager webhook runs"
+}

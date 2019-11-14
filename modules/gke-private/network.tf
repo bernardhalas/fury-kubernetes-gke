@@ -55,3 +55,19 @@ resource "google_compute_firewall" "nodes" {
   target_tags = ["${var.env}"]
   source_tags = ["${var.env}"]
 }
+
+// THIS RULE IS REQUIRED FOR MASTER NODES TO ACCESS CERT-MANAGER WEBHOOK ON THE NODES
+resource "google_compute_firewall" "cert-webhook" {
+  count         = "${var.cert-manager-support}" ? "1" : "0"
+  name          = "${var.name}-${var.env}-cert-webhook"
+  network       = "${var.network}"
+  direction     = "INGRESS"
+
+  allow {
+    protocol = "TCP"
+    ports    = ["6443"]
+  }
+
+  target_tags   = ["internal-${var.env}"]
+  source_ranges = ["${var.master_cidr}"]
+}
